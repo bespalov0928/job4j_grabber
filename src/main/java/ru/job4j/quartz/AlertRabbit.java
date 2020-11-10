@@ -2,14 +2,14 @@ package ru.job4j.quartz;
 
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
+import ru.job4j.grabber.ClassLoaderDemo;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileReader;
+import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Scanner;
 
 import static org.quartz.JobBuilder.*;
 import static org.quartz.TriggerBuilder.*;
@@ -18,8 +18,9 @@ import static org.quartz.SimpleScheduleBuilder.*;
 public class AlertRabbit {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         Properties cfg;
-        String filePath = "src\\main\\java\\ru\\job4j\\quartz\\rabbit.properties";
-        cfg = reads(filePath);
+        //String filePath = "src\\main\\java\\ru\\job4j\\quartz\\rabbit.properties";
+        //cfg = reads(filePath);
+        cfg = ClassLoaderDemo.getResource();
 
         Class.forName("org.postgresql.Driver");
         String url = cfg.getProperty("jdbc.url");
@@ -93,6 +94,8 @@ public class AlertRabbit {
 
         Properties cfg = new Properties();
 
+
+
         try (FileInputStream in = new FileInputStream(filePath)) {
             cfg.load(in);
         } catch (Exception e) {
@@ -100,6 +103,10 @@ public class AlertRabbit {
         }
         return cfg;
     }
+
+
+
+
 
     public static void add(Connection connect, String text) {
         try (PreparedStatement ps = connect.prepareStatement("insert into rabbit(comment) values (?)")) {
