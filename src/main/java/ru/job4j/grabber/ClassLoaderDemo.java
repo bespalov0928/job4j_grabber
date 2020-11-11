@@ -7,9 +7,24 @@ public class ClassLoaderDemo {
     public static Properties getResource() {
 
         Properties cfg = new Properties();
-        try (InputStream defaultsStream = ClassLoaderDemo.class.getResourceAsStream("rabbit.properties")) {
+        //String path = "src\\main\\resource\\rabbit.properties";
+        String rsc = "rabbit.properties";
+        String val = "";
+        InputStream i = null;
+        try {
+            Class cls = Class.forName("ru.job4j.grabber.ClassLoaderDemo");
+            ClassLoader cLoader = cls.getClassLoader();
 
-            cfg.load(defaultsStream);
+            i = cLoader.getResourceAsStream(rsc);
+            String a = "";
+            //BufferedReader r = new BufferedReader(new InputStreamReader(i));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try (InputStream defaultsStream = ClassLoaderDemo.class.getResourceAsStream(rsc)) {
+
+            cfg.load(i);
         } catch (IOException e) {
             e.printStackTrace();
         }
