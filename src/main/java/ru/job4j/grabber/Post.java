@@ -26,6 +26,9 @@ public class Post {
         created = (Date) filds.get("created");
     }
 
+    public Post() {
+    }
+
     public String getName() {
         return name;
     }
