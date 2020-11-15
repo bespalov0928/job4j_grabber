@@ -9,7 +9,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.Scanner;
 
 import static org.quartz.JobBuilder.*;
 import static org.quartz.TriggerBuilder.*;
@@ -18,8 +17,6 @@ import static org.quartz.SimpleScheduleBuilder.*;
 public class AlertRabbit {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         Properties cfg;
-        //String filePath = "src\\main\\java\\ru\\job4j\\quartz\\rabbit.properties";
-        //cfg = reads(filePath);
         cfg = ClassLoaderDemo.getResource();
 
         Class.forName("org.postgresql.Driver");
@@ -35,12 +32,10 @@ public class AlertRabbit {
             data.put("store", store);
             data.put("connect", connection);
 
-
             try {
 
                 Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
                 scheduler.start();
-
 
                 JobDetail job = newJob(Rabbit.class)
                         .usingJobData(data)
@@ -73,20 +68,9 @@ public class AlertRabbit {
         public void execute(JobExecutionContext context) throws JobExecutionException {
             System.out.println("Rabbit runs here ...");
 
-            //List<Long> store = (List<Long>) context.getJobDetail().getJobDataMap().get("store");
             Connection connect = (Connection) context.getJobDetail().getJobDataMap().get("connect");
 
-            //store.add(System.currentTimeMillis());
             AlertRabbit.add(connect, "Task end");
-//            try (BufferedReader in = new BufferedReader(new FileReader("src\\main\\java\\ru\\job4j\\quartz\\rabbit.properties"))) {
-//                List<String> lines = new ArrayList<>();
-//                in.lines().forEach(lines::add);
-//                for (String line: lines) {
-//                    System.out.println(line);
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
         }
     }
 

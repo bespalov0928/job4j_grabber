@@ -59,9 +59,9 @@ public class Post {
     }
 
 
-    public static Map postParser(String url) throws IOException, ParseException {
+    public static Map<String, String> postParser(String url) throws IOException, ParseException {
 
-        HashMap map = new HashMap();
+        HashMap map = new HashMap<String, String>();
         map.put("name ", "");
         map.put("text ", "");
         map.put("link ", "");
@@ -71,8 +71,6 @@ public class Post {
         String text = "";
         String link = "";
         Date created = new Date();
-
-        //Post post = new Post();
 
         Document doc = Jsoup.connect(url).get();
         Elements rowMsgTableArr = doc.select(".msgTable");
@@ -91,9 +89,6 @@ public class Post {
         String createdString = rowMsgFooterArr.get(0).text();
         String[] dateCreationArr = createdString.split(",");
         created = FormatDate.formatDate(dateCreationArr[0]);
-//        post.avtor = avtor;
-//        post.description = description;
-//        post.dateCreation = dateCreation;
 
         map.put("name", name);
         map.put("text", text);
