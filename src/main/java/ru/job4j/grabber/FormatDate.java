@@ -6,7 +6,23 @@ import java.util.*;
 
 public class FormatDate {
 
-    public static Date formatDate(String dataString, HashMap mapMonths) throws ParseException {
+    public static final HashMap<String, String> MAPMONTHS = new HashMap<>();
+    static {
+        MAPMONTHS.put("янв", "01");
+        MAPMONTHS.put("фев", "02");
+        MAPMONTHS.put("мар", "03");
+        MAPMONTHS.put("апр", "04");
+        MAPMONTHS.put("май", "05");
+        MAPMONTHS.put("июн", "06");
+        MAPMONTHS.put("июл", "07");
+        MAPMONTHS.put("авг", "08");
+        MAPMONTHS.put("сен", "09");
+        MAPMONTHS.put("окт", "10");
+        MAPMONTHS.put("ноя", "11");
+        MAPMONTHS.put("дек", "12");
+    }
+
+    public static Date formatDate(String dataString) throws ParseException {
 
         Date date = null;
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy", Locale.ENGLISH);
@@ -29,7 +45,7 @@ public class FormatDate {
             }
         } else {
             day = dataArr[0];
-            manch = (String) mapMonths.get(dataArr[1]);
+            manch = (String) MAPMONTHS.get(dataArr[1]);
             year = dataArr[2].replace(",", "");
         }
 

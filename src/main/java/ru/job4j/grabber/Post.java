@@ -6,32 +6,71 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Post {
 
-    String avtor = "";
-    String description = "";
-    String dateCreation = "";
+    private String name = "";
+    private String text = "";
+    private String link = "";
+    private Date created = new Date();
 
-    public Post(String url) throws IOException {
-        Map filds = postParser(url);
-        avtor = (String) filds.get("avtor");
-        description = (String) filds.get("description");
-        dateCreation = (String) filds.get("dateCreation");
+    public Post(String url) throws IOException, ParseException {
+        Map filds = Post.postParser(url);
+        name = (String) filds.get("name");
+        text = (String) filds.get("text");
+        link = (String) filds.get("link");
+        created = (Date) filds.get("created");
     }
 
-    public static Map postParser(String url) throws IOException {
+    public String getName() {
+        return name;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+
+    public static Map postParser(String url) throws IOException, ParseException {
 
         HashMap map = new HashMap();
-        map.put("avtor", "");
-        map.put("description", "");
-        map.put("dateCreation", "");
+        map.put("name ", "");
+        map.put("text ", "");
+        map.put("link ", "");
+        map.put("created ", new Date());
 
-        String avtor = "";
-        String description = "";
-        String dateCreation = "";
+        String name = "";
+        String text = "";
+        String link = "";
+        Date created = new Date();
 
         //Post post = new Post();
 
@@ -43,22 +82,23 @@ public class Post {
 
         Element rowAvtor = rowMsgBodyArr.get(0);
         Element href = rowAvtor.child(0);
-        avtor = href.text();
+        name = href.text();
 
         Element rowDescription = rowMsgBodyArr.get(1);
-        description = rowDescription.text();
+        text = rowDescription.text();
 
         Elements rowMsgFooterArr = rowMsgTable.select(".msgFooter");
-        dateCreation = rowMsgFooterArr.get(0).text();
-        String[] dateCreationArr = dateCreation.split(",");
-
+        String createdString = rowMsgFooterArr.get(0).text();
+        String[] dateCreationArr = createdString.split(",");
+        created = FormatDate.formatDate(dateCreationArr[0]);
 //        post.avtor = avtor;
 //        post.description = description;
 //        post.dateCreation = dateCreation;
 
-        map.put("avtor", avtor);
-        map.put("description", description);
-        map.put("dateCreation", dateCreationArr[0]);
+        map.put("name", name);
+        map.put("text", text);
+        map.put("link", link);
+        map.put("created", created);
         return map;
     }
 }
