@@ -1,7 +1,7 @@
  create table if not exists post (
     id serial primary key not null,
-    name varchar (255),
+    name text UNIQUE,
     text text,
-    link varchar (510),
+    link text,
     created data
  );
