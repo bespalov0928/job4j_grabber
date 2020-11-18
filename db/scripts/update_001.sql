@@ -1,7 +1,7 @@
- create table if not exists post (
+ create table if not exists rabbit (
     id serial primary key not null,
-    name text UNIQUE,
+    name text ,
     text text,
-    link text,
+    link text UNIQUE,
     created data
  );
