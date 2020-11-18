@@ -3,5 +3,5 @@
     name text ,
     text text,
     link text UNIQUE,
-    created data
+    created date
  );

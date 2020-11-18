@@ -7,5 +7,5 @@ public interface Store {
 
     List<Post> getAll();
 
-    Post findById();
+    Post findById(String id);
 }

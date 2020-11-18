@@ -34,7 +34,7 @@ public class Post {
     }
 
     public Date getCreated() {
-        return created;
+        return  created;
     }
 
     public void setName(String name) {
@@ -53,5 +53,13 @@ public class Post {
         this.created = created;
     }
 
-
+    @Override
+    public String toString() {
+        return "Post{" +
+                "name='" + name + '\'' +
+                ", text='" + text + '\'' +
+                ", link='" + link + '\'' +
+                ", created=" + created +
+                '}';
+    }
 }
