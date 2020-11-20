@@ -30,7 +30,7 @@ public class SqlRuParse implements Parse {
         for (int index = 0; index < row.size(); index++) {
             //Post post = new Post();
             Element href = row.get(index).child(0);
-            text = href.attr(href.text());
+            text = href.text();
             link = href.attr("href");
             if (index % 2 != 0) {
                 String dataString = rowAltCol.get(index * 2 - 1).text();

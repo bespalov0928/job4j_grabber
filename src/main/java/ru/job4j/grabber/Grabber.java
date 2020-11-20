@@ -68,7 +68,7 @@ public class Grabber implements Grab {
                 }
                 for (Post post : listTemp) {
                     //добавить условие на вакансию для java программистов
-                    if (post.getLink().contains("java")) {
+                    if (post.getText().toUpperCase().contains("JAVA") && !post.getText().toUpperCase().contains("JAVASCRIPT")) {
                         try {
                             Post postTemp = parse.detail(post.getLink());
                             store.save(postTemp);
