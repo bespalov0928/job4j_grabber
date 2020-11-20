@@ -93,7 +93,7 @@ public class AlertRabbit {
 
 
     public static void add(Connection connect, String text) {
-        try (PreparedStatement ps = connect.prepareStatement("insert into rabbit(comment) values (?)")) {
+        try (PreparedStatement ps = connect.prepareStatement("insert into rabbit(text) values (?)")) {
             ps.setString(1, text);
             ps.executeUpdate();
 

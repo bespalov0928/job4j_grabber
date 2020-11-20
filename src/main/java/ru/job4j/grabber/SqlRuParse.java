@@ -51,7 +51,7 @@ public class SqlRuParse implements Parse {
 
         String name = "";
         String text = "";
-        String link = "";
+        String link = url;
         Date created = new Date();
 
         Document doc = Jsoup.connect(url).get();
