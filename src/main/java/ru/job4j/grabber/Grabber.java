@@ -4,6 +4,8 @@ import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Properties;
@@ -35,7 +37,7 @@ public class Grabber implements Grab {
     }
 
     @Override
-    public void init(Parse parse, Store store, Scheduler scheduler) throws SchedulerException {
+    public void init(Parse parse, Store store, Scheduler scheduler) throws SchedulerException, InterruptedException {
         JobDataMap data = new JobDataMap();
         data.put("store", store);
         data.put("parse", parse);
@@ -50,6 +52,9 @@ public class Grabber implements Grab {
                 .withSchedule(times)
                 .build();
         scheduler.scheduleJob(job, trigger);
+
+        Thread.sleep(10000);
+        scheduler.shutdown();
     }
 
     public static class GrabJob implements Job {
@@ -63,7 +68,7 @@ public class Grabber implements Grab {
             Parse parse = (Parse) map.get("parse");
 
             for (list = 1; list <= 5; list++) {
-                System.out.println(list);
+                //System.out.println(list);
                 List<Post> listTemp = null;
                 try {
                     listTemp = parse.list(String.format("%s/%s", new Grabber().url, list));
@@ -73,11 +78,9 @@ public class Grabber implements Grab {
                     e.printStackTrace();
                 }
                 for (Post post : listTemp) {
-                    //добавить условие на вакансию для java программистов
                     if (post.getText().toUpperCase().contains("JAVA") && !post.getText().toUpperCase().contains("JAVASCRIPT")) {
                         try {
-                            System.out.println(post.getLink());
-
+                            //System.out.println(post.getLink());
                             Post postTemp = parse.detail(post.getLink());
                             store.save(postTemp);
                         } catch (IOException e) {
@@ -91,6 +94,27 @@ public class Grabber implements Grab {
         }
     }
 
+    public void web(Store store) {
+        new Thread(() -> {
+            try (ServerSocket server = new ServerSocket(Integer.parseInt(cfg.getProperty("port")))) {
+                while (!server.isClosed()) {
+                    Socket socket = server.accept();
+                    try (OutputStream out = socket.getOutputStream()) {
+                        out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
+                        for (Post post : store.getAll()) {
+                            out.write(post.toString().getBytes());
+                            out.write(System.lineSeparator().getBytes());
+                        }
+                    } catch (IOException io) {
+                        io.printStackTrace();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
     public static void main(String[] args) throws Exception {
         Grabber grab = new Grabber();
         System.out.println("1");
@@ -102,5 +126,6 @@ public class Grabber implements Grab {
         System.out.println("4");
         grab.init(new SqlRuParse(), store, scheduler);
         System.out.println("5");
+        grab.web(store);
     }
 }
